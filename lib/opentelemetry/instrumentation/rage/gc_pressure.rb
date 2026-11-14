@@ -65,7 +65,7 @@ module OpenTelemetry
           # Returns false if the metrics are already registered with this provider.
           #
           # @return [Boolean] whether the metrics were registered
-          # rubocop:disable-next Metrics/MethodLength
+          # rubocop:disable Metrics/MethodLength -- Keep the setup method together.
           def setup
             provider = OpenTelemetry.meter_provider
             return false if provider.equal?(@registered_provider)
