@@ -17,6 +17,7 @@ module OpenTelemetry
 
           require_dependencies
           install_instrumentation
+          install_gc_metrics
         end
 
         present do
@@ -37,7 +38,11 @@ module OpenTelemetry
         end
 
         def require_dependencies
+          require "opentelemetry/metrics"
+          require "opentelemetry/metrics/global"
+
           require_relative "log_context"
+          require_relative "gc_pressure"
 
           require_relative "handlers/cable"
           require_relative "handlers/deferred"
@@ -71,6 +76,10 @@ module OpenTelemetry
               config.telemetry.use Handlers::SSE
             end
           end
+        end
+
+        def install_gc_metrics
+          GCPressure.setup
         end
       end
     end
