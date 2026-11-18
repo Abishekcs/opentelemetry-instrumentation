@@ -9,7 +9,7 @@ module OpenTelemetry
     module Rage
       # The Instrumentation class contains logic to detect and install the Rage instrumentation
       class Instrumentation < OpenTelemetry::Instrumentation::Base
-        install do |_config|
+        install do |config|
           unless OpenTelemetry::Instrumentation::Rack::Instrumentation.instance.installed?
             ENV["OTEL_SEMCONV_STABILITY_OPT_IN"] ||= "http"
             OpenTelemetry::Instrumentation::Rack::Instrumentation.instance.install({use_rack_events: false})
@@ -17,8 +17,10 @@ module OpenTelemetry
 
           require_dependencies
           install_instrumentation
-          install_gc_metrics
+          install_gc_metrics if config[:gc_metrics]
         end
+
+        option :gc_metrics, default: false, validate: :boolean
 
         present do
           defined?(::Rage)
